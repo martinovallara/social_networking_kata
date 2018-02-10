@@ -60,6 +60,21 @@ describe("Posting: Alice can publish messages to a personal timeline", function(
       "Alice -> I love the weather today"
     );
   });
+  it("Bob -> Damn! We lost!", function() {
+    expect(sut.command("Bob -> Damn! We lost!")).to.equal(
+      "Bob -> Damn! We lost!"
+    );
+  });
+  it("Bob -> Good game though.", function() {
+    expect(sut.command("Bob -> Good game though.")).to.equal(
+      "Bob -> Good game though."
+    );
+  });
 });
 
-
+describe("Reading: Bob can view Alice’s timeline", function()
+{
+  it("Alice time line", function() {
+    expect(sut.command("Alice")).to.equal("I love the weather today (5 minutes ago)");
+  });
+});
