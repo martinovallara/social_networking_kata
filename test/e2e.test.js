@@ -56,17 +56,17 @@ var sut = require('../app/app');
 
 describe("Posting: Alice can publish messages to a personal timeline", function() {
   it("Alice -> I love the weather today", function() {
-    expect(sut.command("Alice -> I love the weather today")).to.equal(
+    expect(sut.processLine("Alice -> I love the weather today")).to.equal(
       "Alice -> I love the weather today"
     );
   });
   it("Bob -> Damn! We lost!", function() {
-    expect(sut.command("Bob -> Damn! We lost!")).to.equal(
+    expect(sut.processLine("Bob -> Damn! We lost!")).to.equal(
       "Bob -> Damn! We lost!"
     );
   });
   it("Bob -> Good game though.", function() {
-    expect(sut.command("Bob -> Good game though.")).to.equal(
+    expect(sut.processLine("Bob -> Good game though.")).to.equal(
       "Bob -> Good game though."
     );
   });
@@ -75,6 +75,11 @@ describe("Posting: Alice can publish messages to a personal timeline", function(
 describe("Reading: Bob can view Alice’s timeline", function()
 {
   it("Alice time line", function() {
-    expect(sut.command("Alice")).to.equal("I love the weather today (5 minutes ago)");
+    expect(sut.processLine("Alice")).to.contain("I love the weather today");
+  });
+
+  it("Bob time line", function() {
+    expect(sut.processLine("Bob")).to.equal(
+"Good game though.\r\nDamn! We lost!");
   });
 });
