@@ -3,18 +3,14 @@ const invoker = require("./invoker");
 
 class SocialNetworkKata {
   constructor() {
-    var commands = new Commands();////
+    var commands = new Commands(); ////
     var config = [
       {
         pattern: / -> /,
-        action: arg => {
-          return commands.post(arg);
-        }
+        action: a => commands.post(a)
       },
       {
-        defaultAction: arg => {
-          return commands.read(arg);
-        }
+        defaultAction: a => commands.read(a)
       }
     ];
     this.invoker = invoker.createInvoker(config);
