@@ -45,14 +45,11 @@ wall: <user name> wall
 
 */
 
-
-
 var chai = require("chai");
 var assert = chai.assert;
 var expect = chai.expect;
 
-var sut = require('../app/app');
-
+var sut = require("../app/app");
 
 describe("Posting: Alice can publish messages to a personal timeline", function() {
   it("Alice -> I love the weather today", function() {
@@ -66,20 +63,22 @@ describe("Posting: Alice can publish messages to a personal timeline", function(
     );
   });
   it("Bob -> Good game though.", function() {
+    
     expect(sut.processLine("Bob -> Good game though.")).to.equal(
       "Bob -> Good game though."
     );
   });
 });
 
-describe("Reading: Bob can view Alice’s timeline", function()
-{
+describe("Reading: Bob can view Alice’s timeline", function() {
   it("Alice time line", function() {
     expect(sut.processLine("Alice")).to.contain("I love the weather today");
   });
 
   it("Bob time line", function() {
     expect(sut.processLine("Bob")).to.equal(
-"Good game though.\r\nDamn! We lost!");
+      "Good game though.\r\nDamn! We lost!"
+    );
   });
 });
+
