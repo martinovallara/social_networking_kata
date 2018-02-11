@@ -7,7 +7,7 @@ class Commands {
     this.posts = [];
   }
 
-  posting(arg) {
+  post(arg) {
     console.log("execute posting");
     var params = arg.split(this.POSTING);
     var author = params[0];
@@ -16,7 +16,7 @@ class Commands {
     return `${author}${this.POSTING}${message}`;
   }
 
-  reading(arg) {
+  read(arg) {
     console.log("execute reading");
     var author = arg;
     return this.authorPosts(author);

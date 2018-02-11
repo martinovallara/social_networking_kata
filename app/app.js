@@ -1,22 +1,27 @@
 var Commands = require("./commands");
-//var invoker = require("./invoker");
-var Invoker = require("./invoker").Invoker;
-var command = Invoker.command; 
-var commandDefault = Invoker.commandDefault;
+const invoker = require("./invoker");
+
 class SocialNetworkKata {
   constructor() {
-    var commands = new Commands();
-    Invoker.command(/ -> /, arg => {
-      return commands.posting(arg);
-    });
-
-    Invoker.commandDefault(arg => {
-      return commands.reading(arg);
-    });
+    var commands = new Commands();////
+    var config = [
+      {
+        pattern: / -> /,
+        action: arg => {
+          return commands.post(arg);
+        }
+      },
+      {
+        defaultAction: arg => {
+          return commands.read(arg);
+        }
+      }
+    ];
+    this.invoker = invoker.createInvoker(config);
   }
 
   processLine(arg) {
-    return Invoker.processLine(arg);
+    return this.invoker.processLine(arg);
   }
 }
 
