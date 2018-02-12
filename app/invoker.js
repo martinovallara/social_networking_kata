@@ -1,7 +1,5 @@
 class Invoker {
   constructor(config) {
-    console.log("new Invoker");
-
     this.patternCommands = config;
   }
 

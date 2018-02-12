@@ -8,7 +8,6 @@ class Commands {
   }
 
   post(arg) {
-    console.log("execute posting");
     var params = arg.split(this.POSTING);
     var author = params[0];
     var message = params[1];
@@ -17,7 +16,6 @@ class Commands {
   }
 
   read(arg) {
-    console.log("execute reading");
     var author = arg;
     return this.authorPosts(author);
   }
@@ -31,7 +29,8 @@ class Commands {
         return new Date(p.date);
       })
       .Select(p => {
-        return p.message;
+        var minutes = getMinutes(p);
+        return `${p.message} (${minutes} minute${plurals(minutes)} ago)`;
       })
       .ToArray()
       .join("\r\n");
@@ -39,3 +38,15 @@ class Commands {
 }
 
 module.exports = Commands;
+
+
+function plurals(minutes) {
+  return minutes == 1 ? '' : 's';
+}
+
+function getMinutes(p) {
+  var deltaTime = (new Date() - p.date);
+  var minutes = Math.round(((deltaTime % 86400000) % 3600000) / 60000); // minutes
+  return minutes;
+}
+

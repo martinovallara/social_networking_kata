@@ -44,26 +44,38 @@ wall: <user name> wall
 
 
 */
-
+var moment = require("moment");
 var chai = require("chai");
+var tk = require("timekeeper");
 var assert = chai.assert;
 var expect = chai.expect;
 
+
+
+
 var sut = require("../app/app");
+
+
+
+
+//const T0 = moment("2010-10-10 10:10");
+const T0 = new Date("2010-10-10 10:00");
 
 describe("Posting: Alice can publish messages to a personal timeline", function() {
   it("Alice -> I love the weather today", function() {
+    tk.freeze(T0);
     expect(sut.processLine("Alice -> I love the weather today")).to.equal(
       "Alice -> I love the weather today"
     );
   });
   it("Bob -> Damn! We lost!", function() {
+    tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 3));
     expect(sut.processLine("Bob -> Damn! We lost!")).to.equal(
       "Bob -> Damn! We lost!"
     );
   });
   it("Bob -> Good game though.", function() {
-    
+    tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 4));
     expect(sut.processLine("Bob -> Good game though.")).to.equal(
       "Bob -> Good game though."
     );
@@ -72,13 +84,21 @@ describe("Posting: Alice can publish messages to a personal timeline", function(
 
 describe("Reading: Bob can view Alice’s timeline", function() {
   it("Alice time line", function() {
-    expect(sut.processLine("Alice")).to.contain("I love the weather today");
+    tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 5));
+    var result = sut.processLine("Alice");
+    expect(result).to.contain("I love the weather today");
+    expect(result).to.contain("(5 minutes ago)");
   });
 
   it("Bob time line", function() {
-    expect(sut.processLine("Bob")).to.equal(
-      "Good game though.\r\nDamn! We lost!"
-    );
+    //tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 5));
+    var result = sut.processLine("Bob");
+    expect(result).to.contain("Good game though");
+    expect(result).to.contain("Damn! We lost!");
+
+    expect(result).to.contain("(1 minute ago)");
+    expect(result).to.contain("(2 minutes ago)");
   });
 });
+
 
