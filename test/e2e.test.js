@@ -50,13 +50,7 @@ var tk = require("timekeeper");
 var assert = chai.assert;
 var expect = chai.expect;
 
-
-
-
-var sut = require("../app/app");
-
-
-
+var sut = require("../app/socialNetworkKata").create();
 
 //const T0 = moment("2010-10-10 10:10");
 const T0 = new Date("2010-10-10 10:00");
@@ -91,14 +85,34 @@ describe("Reading: Bob can view Alice’s timeline", function() {
   });
 
   it("Bob time line", function() {
-    //tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 5));
+    tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 5));
     var result = sut.processLine("Bob");
     expect(result).to.contain("Good game though");
     expect(result).to.contain("Damn! We lost!");
 
-    expect(result).to.contain("(1 minute ago)");
+    expect(result).to.contain("(a minute ago)");
     expect(result).to.contain("(2 minutes ago)");
   });
 });
 
+describe("Following", function() {
+  it("Charlie follows Alice, Charlie wall", function() {
+    tk.freeze(new Date(T0.valueOf()).setMinutes(T0.getMinutes() + 5, 2));
+    sut.processLine(
+      "Charlie -> I'm in New York today! Anyone wants to have a coffee?"
+    );
+    sut.processLine("Charlie follows Alice");
+    var result = sut.processLine("Charlie wall");
+    expect(result).to.contain(
+      "Charlie - I'm in New York today! Anyone wants to have a coffee?"
+    );
+    expect(result).to.contain("Alice - I love the weather today");
+  });
 
+  it("Charlie also follow Bob", function() {
+    sut.processLine("Charlie follows Bob");
+    var result = sut.processLine("Charlie wall");
+    expect(result).to.contain("Bob - Good game though");
+    expect(result).to.contain("Bob - Damn! We lost!");
+  });
+});

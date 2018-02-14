@@ -8,7 +8,7 @@ class Invoker {
       return this.isMatchedPattern(a, arg) || a.defaultAction != null;
     });
 
-    if (matchedAction.action != null) return matchedAction.action(arg);
+    if (matchedAction.action != null) return matchedAction.action(arg, matchedAction.pattern);
 
     return matchedAction.defaultAction(arg);
   }

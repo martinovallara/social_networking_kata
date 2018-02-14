@@ -7,7 +7,15 @@ class SocialNetworkKata {
     var config = [
       {
         pattern: / -> /,
-        action: a => commands.post(a)
+        action: (a,item) => commands.post(a, item)
+      },
+      {
+        pattern: / follows /,
+        action: (a,item) => commands.follows(a,item)
+      },
+      {
+        pattern: / wall/,
+        action: (a,item) => commands.wall(a,item)
       },
       {
         defaultAction: a => commands.read(a)
@@ -21,4 +29,6 @@ class SocialNetworkKata {
   }
 }
 
-module.exports = new SocialNetworkKata();
+exports.create = function() {
+  return new SocialNetworkKata();
+};
