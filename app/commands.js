@@ -3,7 +3,6 @@ var Post = require("./post");
 var moment = require("moment");
 class Commands {
   constructor() {
-    this.POST = " -> ";
     this.posts = [];
     this.followed = {};
   }
