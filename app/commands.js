@@ -4,40 +4,39 @@ var moment = require("moment");
 class Commands {
   constructor() {
     this.posts = [];
-    this.followed = {};
+    this.following = {};
   }
 
   post(arg, pattern) {
     var params = arg.split(pattern);
-    var author = params[0];
-    var message = params[1];
+    var author = params[0],
+      message = params[1];
     this.posts.push(new Post(author, message));
     return arg;
   }
 
   follows(arg, pattern) {
     var params = arg.split(pattern);
-    var author = params[0];
-    var follow = params[1];
+    var author = params[0],
+      follow = params[1];
 
-    if (this.followed[author] == null) this.followed[author] = [];
-    var followed = this.followed[author];
-    if (followed.indexOf(followed) == -1) followed.push(follow);
+    if (this.following[author] == null) this.following[author] = [];
+    var following = this.following[author];
+    if (!following.includes(follow)) following.push(follow);
     return `${arg} now!`;
   }
 
   wall(arg, pattern) {
-    var params = arg.split(pattern);
-    var author = params[0];
+    var author = arg.split(pattern)[0];
     var membersOfWall = [];
     membersOfWall.push(author);
 
-    if (this.followed[author] != null && this.followed[author].length > 0)
-      membersOfWall = membersOfWall.concat(this.followed[author]);
+    if (this.hasFollowing(author))
+      membersOfWall = membersOfWall.concat(this.following[author]);
 
     var result = new LINQ(this.posts)
       .Where(p => {
-        return membersOfWall.indexOf(p.author) >= 0;
+        return membersOfWall.includes(p.author);
       })
       .OrderByDescending(p => {
         return new Date(p.date);
@@ -51,8 +50,11 @@ class Commands {
     return result.join("\r\n");
   }
 
-  read(arg) {
-    var author = arg;
+  hasFollowing(author) {
+    return this.following[author] != null && this.following[author].length > 0;
+  }
+
+  read(author) {
     return this.authorPosts(author);
   }
 
